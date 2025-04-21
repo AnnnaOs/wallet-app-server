@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
-import { randomBytes } from 'crypto';
 import { UsersCollection } from '../db/models/user.js';
 import { SessionsCollection } from '../db/models/session.js';
 import jwt from 'jsonwebtoken';
@@ -10,19 +9,18 @@ const JWT_SECRET = getEnvVar('JWT_SECRET');
 const ACCESS_TOKEN_EXPIRES = '24h';
 
 export const registerUser = async (payload) => {
-  export const registerUser = async (payload) => {
-    const userExists = await UsersCollection.findOne({ email: payload.email });
+  const userExists = await UsersCollection.findOne({ email: payload.email });
 
-    if (userExists) {
-        throw createHttpError(409, 'Email in use');
-    }
+  if (userExists) {
+    throw createHttpError(409, 'Email in use');
+  }
 
-    const hashedPassword = await bcrypt.hash(payload.password, 10);
+  const hashedPassword = await bcrypt.hash(payload.password, 10);
 
-    return await UsersCollection.create({
-        ...payload,
-        password: hashedPassword,
-    });
+  return await UsersCollection.create({
+    ...payload,
+    password: hashedPassword,
+  });
 };
 
 export const loginUser = async ({ email, password }) => {
@@ -33,13 +31,13 @@ export const loginUser = async ({ email, password }) => {
   if (!isPasswordValid) throw createHttpError(401, 'Invalid credentials');
 
   const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
-    expiresIn: ACCESS_TOKEN_EXPIRES
+    expiresIn: ACCESS_TOKEN_EXPIRES,
   });
 
   const session = await SessionsCollection.create({
     userId: user._id,
     accessToken,
-    accessTokenValidUntil: new Date(Date.now() + 3600000)
+    accessTokenValidUntil: new Date(Date.now() + 3600000),
   });
 
   return { user, accessToken, sessionId: session._id };
