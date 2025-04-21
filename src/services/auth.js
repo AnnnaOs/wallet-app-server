@@ -9,7 +9,21 @@ import { getEnvVar } from '../utils/getEnvVar.js';
 const JWT_SECRET = getEnvVar('JWT_SECRET');
 const ACCESS_TOKEN_EXPIRES = '24h';
 
-export const registerUser = async (payload) => {};
+export const registerUser = async (payload) => {
+  export const registerUser = async (payload) => {
+    const userExists = await UsersCollection.findOne({ email: payload.email });
+
+    if (userExists) {
+        throw createHttpError(409, 'Email in use');
+    }
+
+    const hashedPassword = await bcrypt.hash(payload.password, 10);
+
+    return await UsersCollection.create({
+        ...payload,
+        password: hashedPassword,
+    });
+};
 
 export const loginUser = async ({ email, password }) => {
   const user = await UsersCollection.findOne({ email });
