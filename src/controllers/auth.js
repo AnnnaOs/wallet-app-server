@@ -3,7 +3,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 export const registerUserController = async (req, res) => {};
 
-export const loginUserController = ctrlWrapper(async (req, res) => {
+export const loginUserController = async (req, res) => {
   const { email, password } = req.body;
   const { user, accessToken, sessionId } = await loginUser({ email, password });
 
@@ -21,7 +21,7 @@ export const loginUserController = ctrlWrapper(async (req, res) => {
     },
     accessToken
   });
-});
+};
 
 export const logoutUserController = async (req, res) => {
   if (req.cookies.sessionId) {
