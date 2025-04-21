@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const usersSchema = new Schema(
   {
@@ -15,6 +16,16 @@ usersSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   return obj;
+};
+
+usersSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+usersSchema.methods.checkPassword = async function (password) {
+  return bcrypt.compare(password, this.password);
 };
 
 export const UsersCollection = model('users', usersSchema);
