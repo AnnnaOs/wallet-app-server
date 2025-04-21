@@ -1,0 +1,23 @@
+tags:
+  - Transactions
+summary: Delete transaction
+operationId: deleteTransaction
+description: 'Deletes an existing transaction.'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: transactionId
+    description: ID of the transaction to delete
+    required: true
+    schema:
+      type: string
+responses:
+  '204':
+    description: Transaction deleted successfully (no content returned)
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../components/responses/404.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

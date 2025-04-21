@@ -1,0 +1,45 @@
+type: object
+required:
+  - name
+  - email
+  - password
+properties:
+  name:
+    description: Full name of the user
+    type: string
+    minLength: 3
+    maxLength: 20
+    example: 'John Doe'
+  email:
+    description: Unique user email
+    type: string
+    format: email
+    maxLength: 64
+    example: 'john.doe@example.com'
+  password:
+    description: User password (only for input)
+    type: string
+    format: password
+    minLength: 8
+    maxLength: 64
+    example: 'strongPass123'
+  balance:
+    description: User's account balance
+    type: number
+    default: 0
+    example: 1000
+  avatarUrl:
+    description: URL of the user's avatar
+    type: string
+    default: null
+    example: https://res.cloudinary.com/dgyongwjc/image/upload/v1744146627/slgdtgnmc7gzm2afbblt.jpg
+  createdAt:
+    type: string
+    format: date-time
+    description: Date of account creation
+    example: '2024-04-20T12:00:00.000Z'
+  updatedAt:
+    type: string
+    format: date-time
+    description: Last update date
+    example: '2024-04-21T08:30:00.000Z'
