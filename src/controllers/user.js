@@ -15,7 +15,7 @@ export const getCurrentUserController = async (req, res, next) => {
 };
 
 export const patchUserController = async (req, res) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   const result = await updateUser(userId, req.body);
   if (!result) {
     throw createHttpError(404, 'User not found');
