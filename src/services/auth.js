@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UsersCollection } from '../db/models/user.js';
 import { SessionsCollection } from '../db/models/session.js';
@@ -15,20 +15,16 @@ export const registerUser = async (payload) => {
     throw createHttpError(409, 'Email in use');
   }
 
-  const hashedPassword = await bcrypt.hash(payload.password, 10);
-
-  return await UsersCollection.create({
-    ...payload,
-    password: hashedPassword,
-  });
+  return await UsersCollection.create(payload);
 };
 
 export const loginUser = async ({ email, password }) => {
   const user = await UsersCollection.findOne({ email });
+
   if (!user) throw createHttpError(401, 'Invalid credentials');
 
   const isPasswordValid = await user.checkPassword(password);
-  if (!isPasswordValid) throw createHttpError(401, 'Invalid credentials');
+  if (!isPasswordValid) throw createHttpError(401, 'Invalid password');
 
   const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
     expiresIn: ACCESS_TOKEN_EXPIRES,
