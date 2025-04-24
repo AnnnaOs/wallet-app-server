@@ -10,12 +10,13 @@ const transactionsSchema = new Schema(
     date: {
       type: Date,
       required: true,
+      default: Date.now,
     },
     type: {
       type: String,
       required: true,
-      enum: ['income', 'expense'],
-      default: 'income',
+      enum: ['Income', 'Expense'],
+      default: 'Income',
     },
     category: {
       type: String,
@@ -50,4 +51,4 @@ const transactionsSchema = new Schema(
   },
 );
 
-export const TransactionsCollection = model('transactions', transactionsSchema);
+export const TransactionsCollection = model('Transactions', transactionsSchema);
