@@ -20,7 +20,9 @@ export const loginUserController = async (req, res) => {
     secure: process.env.NODE_ENV === 'production',
   });
 
-  res.json({
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully logged in an user!',
     user: {
       email: user.email,
       name: user.name,
