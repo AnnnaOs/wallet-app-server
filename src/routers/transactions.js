@@ -3,34 +3,40 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
-  addTransactionSchema,
-  editTransactionSchema,
+  addTransactionsSchema,
+  editTransactionsSchema,
 } from '../validation/transactions.js';
-
 import {
-  getTransactionsController,
   createTransactionController,
   deleteTransactionController,
-  patchTransactionController,
+  getAllTransactionsController,
+  updateTransactionController,
 } from '../controllers/transactions.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
-router.get('/', ctrlWrapper(getTransactionsController));
+router.get('/', authenticate, ctrlWrapper(getAllTransactionsController));
 
-router.post('/', ctrlWrapper(createTransactionController));
+router.post(
+  '/',
+  authenticate,
+  validateBody(addTransactionsSchema),
+  ctrlWrapper(createTransactionController),
+);
 
 router.patch(
-  '/:transactionId',
+  '/:id',
+  authenticate,
   isValidId,
-  validateBody(editTransactionSchema),
-  ctrlWrapper(patchTransactionController),
+  validateBody(editTransactionsSchema),
+  ctrlWrapper(updateTransactionController),
 );
 
 router.delete(
-  '/:transactionId',
+  '/:id',
+  authenticate,
   isValidId,
-  validateBody(addTransactionSchema),
   ctrlWrapper(deleteTransactionController),
 );
 
