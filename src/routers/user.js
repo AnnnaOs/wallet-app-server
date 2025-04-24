@@ -1,16 +1,17 @@
 import { Router } from 'express';
-import {
-  getCurrentUserController,
-  patchUserController,
-} from '../controllers/user.js';
-import { isValidId } from '../middlewares/isValidId.js';
-import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { getCurrentUserController, updateAvatarController, updateUserController } from '../controllers/user.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/upload.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = Router();
 
-router.get('/currentUser', isValidId, ctrlWrapper(getCurrentUserController));
+router.get('/current', authenticate, ctrlWrapper(getCurrentUserController));
 
-router.patch('/currentUser', authenticate, ctrlWrapper(patchUserController));
+router.patch('/current', authenticate, ctrlWrapper(updateUserController));
+
+
+// 🔽 Додаємо аватар
+router.patch('/avatar', authenticate, upload.single('avatar'), ctrlWrapper(updateAvatarController));
 
 export default router;
