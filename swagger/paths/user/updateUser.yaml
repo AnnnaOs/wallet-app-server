@@ -1,0 +1,66 @@
+tags:
+  - User
+summary: Update user profile
+operationId: updateUser
+description: Allows the authenticated user to update their profile data or specific contact fields.
+security:
+  - bearerAuth: []
+
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            example: John Doe
+          email:
+            type: string
+            format: email
+            example: john.doe@example.com
+          avatarUrl:
+            type: string
+            example: https://res.cloudinary.com/example/image/upload/avatar.jpg
+        additionalProperties: false
+responses:
+  '200':
+    description: Successfully updated user data
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: User updated successfully
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: 65e4abc123xyz
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+                avatarUrl:
+                  type: string
+                  example: https://res.cloudinary.com/example/image/upload/avatar.jpg
+                updatedAt:
+                  type: string
+                  format: date-time
+                  example: '2025-04-21T12:34:56.789Z'
+  '400':
+    $ref: '../../components/responses/400.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

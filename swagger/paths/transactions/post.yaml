@@ -1,0 +1,85 @@
+tags:
+  - Transactions
+summary: Create a new transaction
+operationId: createTransaction
+description: Adds a new income or expense transaction.
+security:
+  - bearerAuth: []
+
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - date
+          - type
+          - category
+          - sum
+        properties:
+          date:
+            type: string
+            format: date
+            example: '2024-11-15'
+          type:
+            type: string
+            enum: [income, expense]
+            example: 'expense'
+          category:
+            type: string
+            enum:
+              - Income
+              - Main expenses
+              - Products
+              - Car
+              - Self care
+              - Child care
+              - Household products
+              - Education
+              - Leisure
+              - Other expenses
+              - Entertainment
+            example: 'Products'
+          comment:
+            type: string
+            example: 'Coffee and snack'
+          sum:
+            type: number
+            format: float
+            minimum: 0
+            example: 150.00
+
+responses:
+  '201':
+    description: Transaction created
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Transaction created successfully'
+            data:
+              type: object
+              example:
+                _id: '65e4decdd286b30065d54ah54'
+                userId: '65e4decdd286b30065d54af9'
+                date: '2024-11-15'
+                type: 'expense'
+                category: 'Products'
+                comment: 'Coffee'
+                sum: 150
+                createdAt: '2024-04-20T12:34:56.000Z'
+                updatedAt: '2024-04-20T12:34:56.000Z'
+
+  '400':
+    $ref: '../../components/responses/400.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

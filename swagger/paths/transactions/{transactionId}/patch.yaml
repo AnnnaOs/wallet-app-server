@@ -1,0 +1,86 @@
+tags:
+  - Transactions
+summary: Update a transaction
+operationId: updateTransaction
+description: Updates a transaction by ID.
+security:
+  - bearerAuth: []
+
+parameters:
+  - name: transactionId
+    in: path
+    required: true
+    schema:
+      type: string
+    description: ID of the transaction to update
+
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          date:
+            type: string
+            format: date
+            example: '2024-11-20'
+          type:
+            type: string
+            enum: [income, expense]
+            example: 'income'
+          category:
+            type: string
+            enum:
+              - Income
+              - Main expenses
+              - Products
+              - Car
+              - Self care
+              - Child care
+              - Household products
+              - Education
+              - Leisure
+              - Other expenses
+              - Entertainment
+            example: 'Education'
+          comment:
+            type: string
+            example: 'Book purchase'
+          sum:
+            type: number
+            format: float
+            minimum: 0
+            example: 200
+
+responses:
+  '200':
+    description: Transaction updated
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Transaction updated successfully'
+            data:
+              type: object
+              example:
+                _id: '65e4dxyzabc'
+                date: '2024-11-20'
+                type: 'income'
+                category: 'Education'
+                comment: 'Book purchase'
+                sum: 200
+  '400':
+    $ref: '../../../components/responses/400.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../components/responses/404.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'
