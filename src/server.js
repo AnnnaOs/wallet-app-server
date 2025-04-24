@@ -32,8 +32,8 @@ export const setupServer = () => {
     }),
   );
 
-  app.use('/avatars', express.static('public/avatars'));
-  
+  // app.use('/avatars', express.static('public/avatars'));
+
   app.use(router);
   app.use('/api-docs', swaggerDocs());
   app.use('*', notFoundHandler);
