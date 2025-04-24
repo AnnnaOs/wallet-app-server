@@ -1,0 +1,102 @@
+tags:
+  - Transactions
+summary: Get all transactions
+operationId: getTransactions
+description: Returns a list of all user transactions with optional filters and pagination.
+security:
+  - bearerAuth: []
+
+parameters:
+  - name: type
+    in: query
+    description: Filter by transaction type
+    required: false
+    schema:
+      type: string
+      enum: [income, expense]
+  - name: page
+    in: query
+    description: Page number for pagination
+    required: false
+    schema:
+      type: integer
+      default: 1
+  - name: limit
+    in: query
+    description: Number of transactions per page
+    required: false
+    schema:
+      type: integer
+      default: 20
+  - name: sortBy
+    in: query
+    description: Field to sort by
+    required: false
+    schema:
+      type: string
+      enum: [date, sum, category]
+      default: date
+  - name: sortOrder
+    in: query
+    description: Sort order
+    required: false
+    schema:
+      type: string
+      enum: [asc, desc]
+      default: desc
+
+responses:
+  '200':
+    description: Successfully retrieved transactions
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            data:
+              type: object
+              properties:
+                total:
+                  type: integer
+                  example: 100
+                page:
+                  type: integer
+                  example: 1
+                limit:
+                  type: integer
+                  example: 20
+                transactions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      date:
+                        type: string
+                        format: date
+                      type:
+                        type: string
+                        enum: [income, expense]
+                      category:
+                        type: string
+                      comment:
+                        type: string
+                      sum:
+                        type: number
+                        format: float
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+  '400':
+    $ref: '../../components/responses/400.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

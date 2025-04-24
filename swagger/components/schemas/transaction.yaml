@@ -1,0 +1,72 @@
+type: object
+
+required:
+  - userId
+  - date
+  - type
+  - category
+  - sum
+
+properties:
+  _id:
+    type: string
+    description: ID of the transaction
+    example: '65e4decdd286b30065d54af9'
+
+  userId:
+    type: string
+    description: ID of the user who created the transaction
+    example: '65e4aa98d286b30065d54a9c'
+
+  date:
+    type: string
+    format: date
+    description: Transaction date
+    example: '2024-11-15'
+
+  type:
+    type: string
+    description: Type of transaction
+    enum: [income, expense]
+    example: 'income'
+
+  category:
+    type: string
+    description: Transaction category
+    enum:
+      - Income
+      - Main expenses
+      - Products
+      - Car
+      - Self care
+      - Child care
+      - Household products
+      - Education
+      - Leisure
+      - Other expenses
+      - Entertainment
+    example: 'Products'
+
+  comment:
+    type: string
+    description: Optional comment for the transaction
+    example: 'Lunch at work'
+
+  sum:
+    type: number
+    format: float
+    minimum: 0
+    description: Transaction amount
+    example: 100.00
+
+  createdAt:
+    type: string
+    format: date-time
+    description: Creation timestamp
+    example: '2024-04-20T12:34:56.000Z'
+
+  updatedAt:
+    type: string
+    format: date-time
+    description: Last update timestamp
+    example: '2024-04-21T10:20:30.000Z'

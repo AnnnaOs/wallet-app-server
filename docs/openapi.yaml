@@ -6,17 +6,58 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: This is a documentation of Wallet App
+
 tags:
-  - name: Wallet
-    description: Wallet operations
   - name: Auth
-    description: Auth operations
+    description: Authentication and authorization operations
+  - name: User
+    description: User management operations
+  - name: Categories
+    description: Income and expense category operations
+  - name: Transactions
+    description: Financial transaction operations
+  - name: Summary
+    description: Operations for generating period reports
+
 servers:
+  - url: http://localhost:3000
   - url: https://wallet-app-server-zu2t.onrender.com
+
 paths:
+  /transactions/{transactionId}:
+    patch:
+      $ref: '../swagger/paths/transactions/{transactionId}/patch.yaml'
+    delete:
+      $ref: '../swagger/paths/transactions/{transactionId}/delete.yaml'
+  /transactions:
+    get:
+      $ref: '../swagger/paths/transactions/get.yaml'
+    post:
+      $ref: '../swagger/paths/transactions/post.yaml'
+  /categories:
+    get:
+      $ref: '../swagger/paths/categories.yaml'
+  /user:
+    get:
+      $ref: '../swagger/paths/user/currentUser.yaml'
+    patch:
+      $ref: '../swagger/paths/user/updateUser.yaml'
+  /auth/login:
+    post:
+      $ref: '../swagger/paths/auth/login.yaml'
+  /auth/logout:
+    post:
+      $ref: '../swagger/paths/auth/logout.yaml'
+  /auth/register:
+    post:
+      $ref: '../swagger/paths/auth/register.yaml'
+  /summary:
+    get:
+      $ref: '../swagger/paths/summary.yaml'
 
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT

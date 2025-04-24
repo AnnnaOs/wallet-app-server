@@ -1,0 +1,43 @@
+tags:
+  - Categories
+summary: Get transaction categories
+operationId: getCategories
+description: Returns the list of available income and expense categories.
+security:
+  - bearerAuth: []
+
+responses:
+  '200':
+    description: Successful response with categories
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            incomes:
+              type: array
+              items:
+                type: string
+              example:
+                - Incomes
+            expenses:
+              type: array
+              items:
+                type: string
+              example:
+                - Main expenses
+                - Products
+                - Car
+                - Self care
+                - Child care
+                - Household products
+                - Education
+                - Leisure
+                - Other expenses
+                - Entertainment
+  '400':
+    $ref: '../components/responses/400.yaml'
+  '401':
+    $ref: '../components/responses/401.yaml'
+  '500':
+    $ref: ../components/responses/500.yaml
