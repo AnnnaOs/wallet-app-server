@@ -1,9 +1,5 @@
 import createHttpError from 'http-errors';
-import {
-  getCurrentUser,
-  // updateUserAvatar,
-  // updateUser,
-} from '../services/users.js';
+import { getCurrentUser } from '../services/users.js';
 // import path from 'path';
 // import fs from 'fs/promises';
 
