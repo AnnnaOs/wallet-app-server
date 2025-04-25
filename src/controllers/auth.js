@@ -1,12 +1,30 @@
 import { registerUser, loginUser, logoutUser } from '../services/auth.js';
 
 export const registerUserController = async (req, res) => {
-  const user = await registerUser(req.body);
+  const { user, accessToken, sessionId } = await registerUser(req.body);
+
+  res.cookie('sessionId', sessionId, {
+    httpOnly: true,
+    maxAge: 3600000,
+    secure: process.env.NODE_ENV === 'production',
+  });
 
   res.status(201).json({
     status: 201,
-    message: 'Successfully registered a user!',
-    data: user,
+    message: 'User successfully registered and logged in',
+    user,
+    accessToken,
+  });
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully registered and logged in!',
+    user: {
+      email: user.email,
+      name: user.name,
+      balance: user.balance,
+    },
+    accessToken,
   });
 };
 
