@@ -1,3 +1,4 @@
+import { ONE_DAY } from '../constants/index.js';
 import { registerUser, loginUser, logoutUser } from '../services/auth.js';
 
 export const registerUserController = async (req, res) => {
@@ -5,7 +6,7 @@ export const registerUserController = async (req, res) => {
 
   res.cookie('sessionId', sessionId, {
     httpOnly: true,
-    maxAge: 3600000,
+    maxAge: ONE_DAY,
     secure: process.env.NODE_ENV === 'production',
   });
 
@@ -34,7 +35,7 @@ export const loginUserController = async (req, res) => {
 
   res.cookie('sessionId', sessionId, {
     httpOnly: true,
-    maxAge: 3600000,
+    maxAge: ONE_DAY,
     secure: process.env.NODE_ENV === 'production',
   });
 
