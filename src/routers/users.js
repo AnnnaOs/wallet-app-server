@@ -6,7 +6,8 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = Router();
 
-router.get('/current', authenticate, ctrlWrapper(getCurrentUserController));
+router.use(authenticate);
+router.get('/current', ctrlWrapper(getCurrentUserController));
 
 // router.patch('/current', authenticate, ctrlWrapper(updateUserController));
 

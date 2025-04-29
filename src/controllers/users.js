@@ -4,17 +4,19 @@ import { getCurrentUser } from '../services/users.js';
 // import fs from 'fs/promises';
 
 export const getCurrentUserController = async (req, res) => {
-  const userId = req.user._id;
-  const currentUser = await getCurrentUser(userId);
+  const user = await getCurrentUser(req.user.id);
 
-  if (!currentUser) {
-    throw createHttpError(404, 'User not found');
+  if (!user) {
+    return res.status(404).json({
+      status: 404,
+      message: 'User not found',
+    });
   }
 
   res.status(200).json({
     status: 200,
-    message: `User found`,
-    data: currentUser,
+    message: 'User data fetched successfully',
+    data: user,
   });
 };
 
