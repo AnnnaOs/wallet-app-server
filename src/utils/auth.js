@@ -10,6 +10,8 @@ export const createSessionForUser = async (user) => {
     expiresIn: ACCESS_TOKEN_EXPIRES,
   });
 
+  await SessionsCollection.deleteOne({ userId: user._id });
+
   const session = await SessionsCollection.create({
     userId: user._id,
     accessToken,
