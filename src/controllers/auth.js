@@ -52,11 +52,20 @@ export const loginUserController = async (req, res) => {
 };
 
 export const logoutUserController = async (req, res) => {
-  if (req.cookies.sessionId) {
-    await logoutUser(req.cookies.sessionId);
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({ message: 'No authorization header' });
   }
 
-  res.clearCookie('sessionId');
+  const token = authHeader.split(' ')[1];
 
+  if (!token) {
+    return res.status(401).json({ message: 'No token found' });
+  }
+
+  await logoutUser(token);
+
+  res.clearCookie('sessionId');
   res.status(204).send();
 };
