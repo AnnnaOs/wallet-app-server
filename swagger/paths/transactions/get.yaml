@@ -1,7 +1,7 @@
 tags:
   - Transactions
 summary: Get all transactions
-operationId: getTransactions
+operationId: getAllTransactions
 description: Returns a list of all user transactions with optional filters and pagination.
 security:
   - bearerAuth: []
@@ -51,49 +51,7 @@ responses:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            status:
-              type: integer
-              example: 200
-            data:
-              type: object
-              properties:
-                total:
-                  type: integer
-                  example: 100
-                page:
-                  type: integer
-                  example: 1
-                limit:
-                  type: integer
-                  example: 20
-                transactions:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      _id:
-                        type: string
-                      date:
-                        type: string
-                        format: date
-                      type:
-                        type: string
-                        enum: [income, expense]
-                      category:
-                        type: string
-                      comment:
-                        type: string
-                      sum:
-                        type: number
-                        format: float
-                      createdAt:
-                        type: string
-                        format: date-time
-                      updatedAt:
-                        type: string
-                        format: date-time
+          $ref: ../../components/schemas/transaction.yaml
   '400':
     $ref: '../../components/responses/400.yaml'
   '401':

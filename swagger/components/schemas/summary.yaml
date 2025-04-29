@@ -1,0 +1,40 @@
+type: object
+properties:
+  status:
+    type: integer
+    example: 200
+  data:
+    type: object
+    properties:
+      incomes:
+        type: array
+        items:
+          type: object
+          properties:
+            category:
+              type: string
+              example: Income
+            total:
+              type: number
+              format: float
+              example: 1200.00
+      expenses:
+        type: array
+        items:
+          type: object
+          properties:
+            category:
+              type: string
+              example: Products
+            total:
+              type: number
+              format: float
+              example: 450.75
+      totalIncome:
+        type: number
+        format: float
+        example: 1200.00
+      totalExpense:
+        type: number
+        format: float
+        example: 890.55

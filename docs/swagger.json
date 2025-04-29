@@ -40,6 +40,512 @@
     }
   ],
   "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User registration",
+        "operationId": "registerUser",
+        "description": "Registers a new user with name, email and password.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 20,
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 64,
+                    "example": "john.doe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8,
+                    "maxLength": 64,
+                    "example": "securePass123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User registered successfully!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "ksIErcdA0oBwLX79f4bPcYXWKyEX/hcN6OcDU1Ll"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User login",
+        "operationId": "loginUser",
+        "description": "User authorization by email and password. Returns the access token.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged in an user!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "ksIErcdA0oBwLX79f4bPcYXWKyEX/hcN6OcDU1Ll"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User logout",
+        "operationId": "logoutUser",
+        "description": "Logs out the currently authenticated user. No content is returned.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User successfully logged out (no content returned)"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/user/current": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get current user info",
+        "operationId": "getCurrentUser",
+        "description": "Returns profile information of the authenticated user.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found user with id 65ca67e7ae7f10c88b598384!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update user profile",
+        "operationId": "updateUser",
+        "description": "Allows the authenticated user to update their profile data or specific contact fields.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "john.doe@example.com"
+                  },
+                  "avatarUrl": {
+                    "type": "string",
+                    "example": "https://res.cloudinary.com/example/image/upload/avatar.jpg"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "65e4abc123xyz"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email",
+                          "example": "john.doe@example.com"
+                        },
+                        "avatarUrl": {
+                          "type": "string",
+                          "example": "https://res.cloudinary.com/example/image/upload/avatar.jpg"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-04-21T12:34:56.789Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Get all transactions",
+        "operationId": "getAllTransactions",
+        "description": "Returns a list of all user transactions with optional filters and pagination.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by transaction type",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "income",
+                "expense"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of transactions per page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date",
+                "sum",
+                "category"
+              ],
+              "default": "date"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort order",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/transaction"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Create a new transaction",
+        "operationId": "createTransaction",
+        "description": "Adds a new income or expense transaction.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/transaction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/transaction"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
     "/transactions/{transactionId}": {
       "patch": {
         "tags": [
@@ -201,285 +707,6 @@
         }
       }
     },
-    "/transactions": {
-      "get": {
-        "tags": [
-          "Transactions"
-        ],
-        "summary": "Get all transactions",
-        "operationId": "getTransactions",
-        "description": "Returns a list of all user transactions with optional filters and pagination.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "type",
-            "in": "query",
-            "description": "Filter by transaction type",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "income",
-                "expense"
-              ]
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Page number for pagination",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 1
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Number of transactions per page",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 20
-            }
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "description": "Field to sort by",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "date",
-                "sum",
-                "category"
-              ],
-              "default": "date"
-            }
-          },
-          {
-            "name": "sortOrder",
-            "in": "query",
-            "description": "Sort order",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "default": "desc"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved transactions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "total": {
-                          "type": "integer",
-                          "example": 100
-                        },
-                        "page": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "example": 20
-                        },
-                        "transactions": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "_id": {
-                                "type": "string"
-                              },
-                              "date": {
-                                "type": "string",
-                                "format": "date"
-                              },
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "income",
-                                  "expense"
-                                ]
-                              },
-                              "category": {
-                                "type": "string"
-                              },
-                              "comment": {
-                                "type": "string"
-                              },
-                              "sum": {
-                                "type": "number",
-                                "format": "float"
-                              },
-                              "createdAt": {
-                                "type": "string",
-                                "format": "date-time"
-                              },
-                              "updatedAt": {
-                                "type": "string",
-                                "format": "date-time"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Transactions"
-        ],
-        "summary": "Create a new transaction",
-        "operationId": "createTransaction",
-        "description": "Adds a new income or expense transaction.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "date",
-                  "type",
-                  "category",
-                  "sum"
-                ],
-                "properties": {
-                  "date": {
-                    "type": "string",
-                    "format": "date",
-                    "example": "2024-11-15"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "income",
-                      "expense"
-                    ],
-                    "example": "expense"
-                  },
-                  "category": {
-                    "type": "string",
-                    "enum": [
-                      "Income",
-                      "Main expenses",
-                      "Products",
-                      "Car",
-                      "Self care",
-                      "Child care",
-                      "Household products",
-                      "Education",
-                      "Leisure",
-                      "Other expenses",
-                      "Entertainment"
-                    ],
-                    "example": "Products"
-                  },
-                  "comment": {
-                    "type": "string",
-                    "example": "Coffee and snack"
-                  },
-                  "sum": {
-                    "type": "number",
-                    "format": "float",
-                    "minimum": 0,
-                    "example": 150
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Transaction created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Transaction created successfully"
-                    },
-                    "data": {
-                      "type": "object",
-                      "example": {
-                        "_id": "65e4decdd286b30065d54ah54",
-                        "userId": "65e4decdd286b30065d54af9",
-                        "date": "2024-11-15",
-                        "type": "expense",
-                        "category": "Products",
-                        "comment": "Coffee",
-                        "sum": 150,
-                        "createdAt": "2024-04-20T12:34:56.000Z",
-                        "updatedAt": "2024-04-20T12:34:56.000Z"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
     "/categories": {
       "get": {
         "tags": [
@@ -499,36 +726,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "incomes": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "example": [
-                        "Incomes"
-                      ]
-                    },
-                    "expenses": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "example": [
-                        "Main expenses",
-                        "Products",
-                        "Car",
-                        "Self care",
-                        "Child care",
-                        "Household products",
-                        "Education",
-                        "Leisure",
-                        "Other expenses",
-                        "Entertainment"
-                      ]
-                    }
-                  }
+                  "$ref": "#/components/schemas/categories"
                 }
               }
             }
@@ -538,388 +736,6 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/user": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get current user info",
-        "operationId": "getCurrentUser",
-        "description": "Returns profile information of the authenticated user.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved user data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully found user with id 65ca67e7ae7f10c88b598384!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "_id": {
-                          "type": "string",
-                          "example": "65ca67e7ae7f10c88b598384"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "John Doe"
-                        },
-                        "email": {
-                          "type": "string",
-                          "format": "email",
-                          "example": "john.doe@example.com"
-                        },
-                        "balance": {
-                          "type": "number",
-                          "example": 1000
-                        },
-                        "avatarUrl": {
-                          "type": "string",
-                          "example": "https://res.cloudinary.com/dgyongwjc/image/upload/v1744146627/slgdtgnmc7gzm2afbblt.jpg"
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2024-04-20T12:00:00.000Z"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2024-04-21T08:30:00.000Z"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Update user profile",
-        "operationId": "updateUser",
-        "description": "Allows the authenticated user to update their profile data or specific contact fields.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "example": "john.doe@example.com"
-                  },
-                  "avatarUrl": {
-                    "type": "string",
-                    "example": "https://res.cloudinary.com/example/image/upload/avatar.jpg"
-                  }
-                },
-                "additionalProperties": false
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully updated user data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "User updated successfully"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "_id": {
-                          "type": "string",
-                          "example": "65e4abc123xyz"
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "John Doe"
-                        },
-                        "email": {
-                          "type": "string",
-                          "format": "email",
-                          "example": "john.doe@example.com"
-                        },
-                        "avatarUrl": {
-                          "type": "string",
-                          "example": "https://res.cloudinary.com/example/image/upload/avatar.jpg"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2025-04-21T12:34:56.789Z"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "User login",
-        "operationId": "loginUser",
-        "description": "User authorization by email and password. Returns the access token.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "email",
-                  "password"
-                ],
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "example": "user@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password",
-                    "example": "password123"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully logged in an user!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "accessToken"
-                      ],
-                      "properties": {
-                        "accessToken": {
-                          "type": "string",
-                          "example": "ksIErcdA0oBwLX79f4bPcYXWKyEX/hcN6OcDU1Ll"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "User logout",
-        "operationId": "logoutUser",
-        "description": "Logs out the currently authenticated user. No content is returned.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "User successfully logged out (no content returned)"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/auth/register": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "User registration",
-        "operationId": "registerUser",
-        "description": "Registers a new user with name, email and password.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "name",
-                  "email",
-                  "password"
-                ],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "minLength": 3,
-                    "maxLength": 20,
-                    "example": "John Doe"
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "maxLength": 64,
-                    "example": "john.doe@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password",
-                    "minLength": 8,
-                    "maxLength": 64,
-                    "example": "securePass123"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "User successfully registered",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "User registered successfully!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "accessToken": {
-                          "type": "string",
-                          "example": "ksIErcdA0oBwLX79f4bPcYXWKyEX/hcN6OcDU1Ll"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -959,62 +775,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "incomes": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "category": {
-                                "type": "string",
-                                "example": "Income"
-                              },
-                              "total": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 1200
-                              }
-                            }
-                          }
-                        },
-                        "expenses": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "category": {
-                                "type": "string",
-                                "example": "Products"
-                              },
-                              "total": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 450.75
-                              }
-                            }
-                          }
-                        },
-                        "totalIncome": {
-                          "type": "number",
-                          "format": "float",
-                          "example": 1200
-                        },
-                        "totalExpense": {
-                          "type": "number",
-                          "format": "float",
-                          "example": 890.55
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/summary"
                 }
               }
             }
@@ -1184,6 +945,233 @@
                     }
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "user": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "name": {
+            "description": "Full name of the user",
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20,
+            "example": "John Doe"
+          },
+          "email": {
+            "description": "Unique user email",
+            "type": "string",
+            "format": "email",
+            "maxLength": 64,
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "description": "User password (only for input)",
+            "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "maxLength": 64,
+            "example": "strongPass123"
+          },
+          "balance": {
+            "description": "User's account balance",
+            "type": "number",
+            "default": 0,
+            "example": 1000
+          },
+          "avatarUrl": {
+            "description": "URL of the user's avatar",
+            "type": "string",
+            "default": null,
+            "example": "https://res.cloudinary.com/dgyongwjc/image/upload/v1744146627/slgdtgnmc7gzm2afbblt.jpg"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of account creation",
+            "example": "2024-04-20T12:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date",
+            "example": "2024-04-21T08:30:00.000Z"
+          }
+        }
+      },
+      "transaction": {
+        "type": "object",
+        "required": [
+          "userId",
+          "date",
+          "type",
+          "category",
+          "sum"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID of the transaction",
+            "example": "65e4decdd286b30065d54af9"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID of the user who created the transaction",
+            "example": "65e4aa98d286b30065d54a9c"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Transaction date",
+            "example": "2024-11-15"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of transaction",
+            "enum": [
+              "income",
+              "expense"
+            ],
+            "example": "income"
+          },
+          "category": {
+            "type": "string",
+            "description": "Transaction category",
+            "enum": [
+              "Income",
+              "Main expenses",
+              "Products",
+              "Car",
+              "Self care",
+              "Child care",
+              "Household products",
+              "Education",
+              "Leisure",
+              "Other expenses",
+              "Entertainment"
+            ],
+            "example": "Products"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Optional comment for the transaction",
+            "example": "Lunch at work"
+          },
+          "sum": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "description": "Transaction amount",
+            "example": 100
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp",
+            "example": "2024-04-20T12:34:56.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp",
+            "example": "2024-04-21T10:20:30.000Z"
+          }
+        }
+      },
+      "categories": {
+        "type": "object",
+        "properties": {
+          "incomes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Incomes"
+            ]
+          },
+          "expenses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Main expenses",
+              "Products",
+              "Car",
+              "Self care",
+              "Child care",
+              "Household products",
+              "Education",
+              "Leisure",
+              "Other expenses",
+              "Entertainment"
+            ]
+          }
+        }
+      },
+      "summary": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "incomes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "string",
+                      "example": "Income"
+                    },
+                    "total": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 1200
+                    }
+                  }
+                }
+              },
+              "expenses": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "string",
+                      "example": "Products"
+                    },
+                    "total": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 450.75
+                    }
+                  }
+                }
+              },
+              "totalIncome": {
+                "type": "number",
+                "format": "float",
+                "example": 1200
+              },
+              "totalExpense": {
+                "type": "number",
+                "format": "float",
+                "example": 890.55
               }
             }
           }

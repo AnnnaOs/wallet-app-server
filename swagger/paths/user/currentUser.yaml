@@ -21,32 +21,7 @@ responses:
               type: string
               example: Successfully found user with id 65ca67e7ae7f10c88b598384!
             data:
-              type: object
-              properties:
-                _id:
-                  type: string
-                  example: '65ca67e7ae7f10c88b598384'
-                name:
-                  type: string
-                  example: 'John Doe'
-                email:
-                  type: string
-                  format: email
-                  example: 'john.doe@example.com'
-                balance:
-                  type: number
-                  example: 1000
-                avatarUrl:
-                  type: string
-                  example: https://res.cloudinary.com/dgyongwjc/image/upload/v1744146627/slgdtgnmc7gzm2afbblt.jpg
-                createdAt:
-                  type: string
-                  format: date-time
-                  example: '2024-04-20T12:00:00.000Z'
-                updatedAt:
-                  type: string
-                  format: date-time
-                  example: '2024-04-21T08:30:00.000Z'
+              $ref: ../../components/schemas/user.yaml
   '404':
     $ref: ../../components/responses/404.yaml
   '500':
