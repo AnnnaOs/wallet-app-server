@@ -32,6 +32,5 @@ export const loginUser = async ({ email, password }) => {
 };
 
 export const logoutUser = async (token) => {
-  await SessionsCollection.deleteOne({ accessToken: token });
-  return undefined;
+  return await SessionsCollection.deleteOne({ accessToken: token });
 };
