@@ -1,5 +1,4 @@
-import { TransactionsCollection } from "../db/models/transaction.js";
-
+import { TransactionsCollection } from '../db/models/transaction.js';
 
 export const getSummaryService = async (userId, period) => {
   if (!period || !/^\d{4}-(0[1-9]|1[0-2])$/.test(period)) {
