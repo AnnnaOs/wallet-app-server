@@ -3,10 +3,10 @@ import {
   getExpenseSummaryByCategories,
   getIncomeAndExpenseSummaryByPeriod,
   getSummary,
+  getSummaryCategories,
 } from '../controllers/summary.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { getTransactionCategories } from '../controllers/categories.js';
 
 const router = Router();
 
@@ -15,7 +15,7 @@ router.get('/transactions/summary', authenticate, ctrlWrapper(getSummary));
 router.get(
   '/transaction-categories',
   authenticate,
-  ctrlWrapper(getTransactionCategories),
+  ctrlWrapper(getSummaryCategories),
 );
 router.get(
   '/transactions-summary/categories',
