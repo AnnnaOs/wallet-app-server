@@ -31,8 +31,8 @@ const transactionsSchema = new Schema(
         'Household products',
         'Education',
         'Leisure',
-        'Other expenses',
         'Entertainment',
+        'Other expenses',
       ],
     },
     comment: {
