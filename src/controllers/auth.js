@@ -1,8 +1,23 @@
+import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
 import { ONE_DAY } from '../constants/index.js';
 import { registerUser, loginUser, logoutUser } from '../services/auth.js';
+import { SessionsCollection } from '../db/models/session.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+
+const JWT_REFRESH_SECRET = getEnvVar('JWT_REFRESH_SECRET');
 
 export const registerUserController = async (req, res) => {
-  const { user, accessToken, sessionId } = await registerUser(req.body);
+  const { user, accessToken, refreshToken, sessionId } = await registerUser(
+    req.body,
+  );
+
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    maxAge: ONE_DAY * 7,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict',
+  });
 
   res.cookie('sessionId', sessionId, {
     httpOnly: true,
@@ -12,26 +27,25 @@ export const registerUserController = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: 'User successfully registered and logged in',
-    user,
-    accessToken,
-  });
-
-  res.status(201).json({
-    status: 201,
     message: 'Successfully registered and logged in!',
-    user: {
-      email: user.email,
-      name: user.name,
-      balance: user.balance,
-    },
+    user,
     accessToken,
   });
 };
 
 export const loginUserController = async (req, res) => {
   const { email, password } = req.body;
-  const { user, accessToken, sessionId } = await loginUser({ email, password });
+  const { user, accessToken, refreshToken, sessionId } = await loginUser({
+    email,
+    password,
+  });
+
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    maxAge: ONE_DAY * 7,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict',
+  });
 
   res.cookie('sessionId', sessionId, {
     httpOnly: true,
@@ -41,12 +55,8 @@ export const loginUserController = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully logged in an user!',
-    user: {
-      email: user.email,
-      name: user.name,
-      balance: user.balance,
-    },
+    message: 'Successfully logged in!',
+    user,
     accessToken,
   });
 };
@@ -67,5 +77,39 @@ export const logoutUserController = async (req, res) => {
   await logoutUser(token);
 
   res.clearCookie('sessionId');
+  res.clearCookie('refreshToken');
+
   res.status(204).send();
+};
+
+export const refreshTokenController = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    throw createHttpError(400, 'Refresh token is required');
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
+    const session = await SessionsCollection.findOne({ refreshToken });
+
+    if (!session) {
+      throw createHttpError(404, 'Session not found');
+    }
+
+    if (decoded.userId.toString() !== session.userId.toString()) {
+      throw createHttpError(401, 'Invalid refresh token');
+    }
+
+    const newAccessToken = jwt.sign(
+      { userId: session.userId },
+      getEnvVar('JWT_SECRET'),
+      { expiresIn: '24h' },
+    );
+
+    res.status(200).json({ accessToken: newAccessToken });
+  } catch (error) {
+    console.error(error);
+    throw createHttpError(401, 'Invalid or expired refresh token');
+  }
 };

@@ -1,7 +1,9 @@
 import { createSessionForUser } from './auth.js';
 
 export const autoLoginUser = async (user) => {
-  const { accessToken, sessionId } = await createSessionForUser(user);
+  const { accessToken, refreshToken, sessionId } = await createSessionForUser(
+    user,
+  );
 
   return {
     user: {
@@ -10,6 +12,7 @@ export const autoLoginUser = async (user) => {
       balance: user.balance,
     },
     accessToken,
+    refreshToken,
     sessionId,
   };
 };
